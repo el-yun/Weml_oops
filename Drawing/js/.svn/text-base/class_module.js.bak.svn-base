@@ -1,0 +1,192 @@
+
+	var OperClass = new ClassStorage();
+	var currentClass;
+
+	var paramData = [];
+	var paramCnt = 0;
+	var param;
+
+	$(document).ready(function() 
+	{
+		localStorage.clear();
+
+		/*var ui = [];
+		
+		ui[0] = new memberVarPro("public", "variba", "double");
+		ui[1] = new memberVarPro("private", "asdf", "int");
+		var ui_string = JSON.stringify(ui);
+
+		var t =new createMemberVar(ui);*/
+
+		//console.log(t);
+		
+		
+
+	});
+	
+	function makeClass(data)
+	{
+		currentClass = OperClass.makeClass(data);
+		$("input[name=currentclass_node]").val(data);
+		var key = "#"+currentClass;
+		var var_html = "<div id='"+currentClass+"_var'>";
+		var func_html = "<div id='"+currentClass+"_func'>";
+
+		if($(key).length > 0)
+		{
+			$("#"+currentClass+"_var").html(OperClass.showLocalStorage("variable"));
+			$("#"+currentClass+"_func").html(OperClass.showLocalStorage("function"));
+			alert(currentClass);
+			return;
+		}
+
+		else
+		{
+			var html = "<div id='"+currentClass+"'>";
+			
+			$(html).appendTo($("#classlist"));
+			$(var_html).appendTo($("#"+currentClass));
+			$(func_html).appendTo($("#"+currentClass));
+
+			if(localStorage.getItem(currentClass+"_varCnt") == undefined)
+			{
+				localStorage.setItem(currentClass+"_varCnt", 0);
+			}
+			if(localStorage.getItem(currentClass+"_funcCnt") == undefined)
+			{
+				localStorage.setItem(currentClass+"_funcCnt", 0);
+			}
+			$("#"+currentClass+"_var").html(OperClass.showLocalStorage("variable"));
+			$("#"+currentClass+"_func").html(OperClass.showLocalStorage("function"));
+			//alert(currentClass);
+		}
+		
+	}
+
+		 function modifyClass()
+		 {
+		  var modfiyClassName = $("#var_classname").val();
+
+		  var key_cnt = currentClass+"_varCnt";
+		  var key_func_cnt = currentClass+"_funcCnt";
+		  var cnt = localStorage.getItem(key_cnt);
+		  var cnt_func = localStorage.getItem(key_func_cnt);
+
+		  for(var i=0; i<cnt; i++)
+		  {
+		   OperClass.saveMembervar(modfiyClassName, i, localStorage.getItem(currentClass+"_var_"+i));
+
+		   localStorage.removeItem(currentClass+"_var_"+i);
+		  }
+
+		  localStorage.removeItem(currentClass+"_varCnt");
+		  localStorage.setItem(modfiyClassName+"_varCnt", cnt);
+
+		  localStorage.removeItem(currentClass+"_funcCnt");
+		  localStorage.setItem(modfiyClassName+"_funcCnt", cnt_func);
+
+		  $("#"+currentClass).attr("id", modfiyClassName);
+		  $("#"+currentClass+"_var").attr("id", modfiyClassName+"_var");
+		  $("#"+currentClass+"_func").attr("id", modfiyClassName+"_func");
+
+
+		  currentClass = modfiyClassName; // 현재 클래스 이름을 수정된 클래스 이름으로
+		  $("#"+currentClass+"_var").html(OperClass.showLocalStorage("variable"));
+		 }
+
+	function saveMemberVariable()
+	{
+		var access = $("input[name=var_access]:checked").val();
+		var data = $("input[name=var_data]:checked").val();
+		var name = $("#var_name").val();
+		currentClass = $("input[name=currentclass_node]").val();
+		var key_cnt = currentClass+"_varCnt";
+		var cnt = localStorage.getItem(key_cnt);
+		var key = "#"+name;
+
+		if($(key).length > 0) return;
+		else
+		{
+			var result = new memberVarPro(access, name, data);
+			
+			if(OperClass.saveMembervar(currentClass, cnt, JSON.stringify(result)) == 1)
+			{
+				
+				alert('로컬스토리지 입력 성공');
+				localStorage.setItem(key_cnt, ++cnt);
+				$("#"+currentClass+"_var").html(OperClass.showLocalStorage("variable"));
+
+			}
+			else
+				alert('로컬스토리지 입력 실패');
+		}
+	}
+
+	function saveMemberFunction()
+	{
+		var access = $("input[name=func_access]:checked").val();
+		var data = $("input[name=func_data]:checked").val();
+		var name = $("#func_name").val();
+		var key_cnt = currentClass+"_funcCnt";
+		var cnt = localStorage.getItem(key_cnt);
+
+		var result = new memberFuncPro(access, name, data, param);
+
+		if(OperClass.saveMemberFunc(currentClass, cnt, JSON.stringify(result)) == 1)
+		{
+			paramData = [];
+			paramCnt = 0;
+			param = "";
+			alert('로컬스토리지 입력 성공');
+			localStorage.setItem(key_cnt, ++cnt);
+			$("#"+currentClass+"_func").html(OperClass.showLocalStorage("function"));
+		}
+		else
+			alert('로컬스토리지 입력 실패');
+
+	}
+
+	function saveParam()
+	{
+		var data = $("input[name=param_data]:checked").val();
+		var name = $("#param_name").val();
+		paramData[paramCnt++] = new addParameter(data, name);
+		param = new addFinalParameter(paramData);
+		console.log(JSON.stringify(param));
+	}
+
+	function finalClassSave()
+	{
+		/*var funccnt = localStorage.getItem(currentClass+"_funcCnt");
+		var varcnt = localStorage.getItem(currentClass+"_varCnt");
+		var test = [];
+		var test_ = [];
+
+		for(var i=0; i<varcnt; i++)
+		{
+			test[i] = JSON.parse(localStorage.getItem(currentClass+"_var_"+i));
+			console.log(test);
+		}
+
+		for(var i=0; i<funccnt; i++)
+		{
+			test_[i] = JSON.parse(localStorage.getItem(currentClass+"_func_"+i));
+		}
+		
+		var temp_var = new createMemberVar(test);
+		var temp_func = new createMemberFunc(test_);
+		console.log(JSON.stringify(temp_var));
+		console.log(JSON.stringify(temp_func));*/
+
+		
+	}
+	function showClassData(access, data, name, cnt)
+	{
+		alert(access + "." + data + "." + name + "." +cnt);
+	}
+	function view()
+	{
+			//var json_data = JSON.stringify(dgrm.nodes);
+			//var json_conn  = JSON.stringify(this.connections);
+			alert(self.params["id"]);
+	}

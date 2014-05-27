@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title>:: Oops! ::</title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <link rel="stylesheet" type="text/css" href="./css/Tool_layout.css">
+  <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+  <script type="text/javascript" src="js/kinetic.js"></script>
+	<script src="js/jquery.ui.core.js"></script>
+	<script src="js/jquery.ui.widget.js"></script>
+	<script src="js/jquery.ui.mouse.js"></script>
+	<script src="js/jquery.ui.draggable.js"></script>
+	<script>
+	var stage = null;
+	var layer = null;
+	var relation = false;
+	var shape_count = 0;
+      window.onload = function() {
+        stage = new Kinetic.Stage({
+          container: "tool_canvas",
+          width: 1024,
+          height: 768
+        });
+        layer = new Kinetic.Layer();
+
+
+		$(function() {
+			$("#tool_toolbar").draggable({ cursor: "move" });
+			$("#new_class").bind("click keydown", new_rectclass);
+			$("#new_relation").bind("click keydown", new_relation);
+		});
+
+		function new_rectclass(){
+			var rect = new Kinetic.Rect({
+			  x: 239,
+			  y: 75,
+			  width: 100,
+			  height: 50,
+			  fill: 'green',
+			  stroke: 'black',
+			  strokeWidth: 4,
+			  name: "shape" + shape_count,
+			  draggable: true
+			});
+			// add the shape to the layer
+			layer.add(rect);
+			// add the layer to the stage
+			stage.add(layer);
+			shape_count++;
+		}
+
+		function new_relation(){
+		    relation = true;
+		    var shape_group = new Kinetic.Group({
+			  draggable: true
+			});
+		    var end_shape = null;
+			console.log("log: " + start_shape + " - " + end_shape);
+		}
+
+			layer.on('mouseover', function(evt) {
+					 evt.shape.setStroke('black');
+					 evt.shape.setStrokeWidth(5);
+			});
+      };
+
+
+
+	</script>
+ </head>
+ <body onselectstart="return false">
+ <div class="tool_container">
+		  <div class="tool_head">
+			<button>Copy</button>
+			<button>Paste</button>
+			<button>Cut</button>
+			<button>Delete</button>
+			<button>Zoom In</button>
+			<button>Zoom Out</button>
+		  </div>
+		  <div class="tool_body">
+				<div class="tool_canvasbox">
+				    <div class="tool_toolbar round_box shadow" id="tool_toolbar">
+							<button id="new_class">Class</button>
+							<button id="new_relation">Relation</button>
+					</div>
+					<div id="tool_canvas"></div>
+				</div>
+		  </div>
+		  <div class="tool_foot">
+		  </div>
+</div>
+ </body>
+</html>

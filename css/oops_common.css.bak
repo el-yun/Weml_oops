@@ -1,0 +1,87 @@
+@import url(http://fonts.googleapis.com/css?family=Calibri:400,700);
+
+@font-face {
+    font-family: 'BankGothicLtBTLight';
+    src: url('../fonts/bank_gothic_light_bt-webfont.eot');
+    src: url('../fonts/bank_gothic_light_bt-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/bank_gothic_light_bt-webfont.ttf') format('truetype'),
+         url('../fonts/bank_gothic_light_bt-webfont.svg#BankGothicLtBTLight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'HelveticaCondensedRegular';
+    src: url('../fonts/helvetica_condensed-webfont.eot');
+    src: url('../fonts/helvetica_condensed-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/helvetica_condensed-webfont.ttf') format('truetype'),
+         url('../fonts/helvetica_condensed-webfont.svg#HelveticaCondensedRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenSansCondensedLight';
+    src: url('../fonts/opensans-condlight-webfont.eot');
+    src: url('../fonts/opensans-condlight-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/opensans-condlight-webfont.ttf') format('truetype'),
+         url('../fonts/opensans-condlight-webfont.svg#OpenSansCondensedLight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'heumweb12';
+    src: url('../fonts/heumweb_gamsuseong.eot');
+    src: url('../fonts/heumweb_gamsuseong.eof?#iefix') format('embedded-opentype'),
+         url('../fonts/heumweb_gamsuseong.ttf') format('truetype'),
+		 url('../fonts/heumweb_gamsuseong.svg#heumweb12') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pastel';
+    src: url('../fonts/pastel-webfont.eot');
+    src: url('../fonts/pastel-webfont.eof?#iefix') format('embedded-opentype'),
+         url('../fonts/pastel-webfont.ttf') format('truetype'),
+		 url('../fonts/pastel-webfont.svg#pastel') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, button, input, select, textarea {
+	/*font-family: sans-serif;*/
+	
+	color: #333333;
+}
+
+ul, ol, li, dl, dt, dd {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+nav ul { 
+	list-style: none; list-style-image: none; margin: 0; padding: 0; 
+}
+
+nav {
+	display: block;
+}
+
+
+html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+body { -webkit-font-smoothing: antialiased; margin: 0; font: 12px/1.7 sans-serif; 
+}
+
+::selection { background: #fe57a1; color: #fff; text-shadow: none; }
+
+a {
+	color: #666;
+	text-decoration: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, div {
+	display: block;
+}

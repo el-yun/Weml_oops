@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+  <title> New Document </title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+	<script src="./js/jquery-1.6.2.min.js"></script>
+  <script src="../js/jquery.printElement.min.js"></script>
+ </head>
+
+ <body>
+
+  <img id="target_print" src="../CutyCapt/UMLThumbnail/<?=$_REQUEST[IMG_URL]?>" width="1110" height="640" border="0" alt="">
+   <script>
+ 	$(document).ready(function(){
+		window.print()
+	});
+ </script>
+ </body>
+</html>

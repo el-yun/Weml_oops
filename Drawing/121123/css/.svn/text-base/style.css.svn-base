@@ -1,0 +1,210 @@
+
+.box_type{position:relative;height:1%;line-height:14px}
+.outer{border:4px solid #e4e4e4}
+.inner{border:1px solid #c7c7c7}
+.box_type p{padding:10px;font-size:12px}
+.box_type .lt{position:absolute;top:-4px;left:-4px;width:7px;height:7px;background:#fff url(../img/bg_border_corner2.gif) no-repeat 0 0;font-size:0}
+.box_type .rt{position:absolute;top:-4px;right:-4px;_right:expression(-this.parentNode.offsetWidth % 2 - 4 + 'px');width:7px;height:7px;background:#fff url(../img/bg_border_corner2.gif) no-repeat 100% 0;font-size:0}
+.box_type .lb{position:absolute;left:-4px;bottom:-4px;_bottom:expression(-this.parentNode.offsetHeight % 2 - 4 + 'px');width:7px;height:7px;background:#fff url(../img/bg_border_corner2.gif) no-repeat 0 100%;font-size:0}
+.box_type .rb{position:absolute;right:-4px;_right:expression(-this.parentNode.offsetWidth % 2 - 4 + 'px');bottom:-4px;width:7px;height:7px;background:#fff url(../img/bg_border_corner2.gif) no-repeat 100% 100%;font-size:0}
+/* //UI Object */
+body
+{
+	font-family:나눔고딕;
+	font-size : 10pt;
+}
+.underline
+{
+	width:100%;
+	border-bottom:1px dashed lightgrey;
+}
+
+.btnstyle
+{
+	margin-left:30px;
+}
+
+.member_variable
+{
+	margin-right:10px;
+	font-size:20pt;
+}
+
+/**
+button design
+*/
+
+.button{
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  padding: 6px 20px;
+  margin: 0;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  overflow: visible;
+  font: bold 13px arial, helvetica, sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+  color: #555;
+  background-color: #ddd;
+  background-image: linear-gradient(top, rgba(255,255,255,1),
+                                         rgba(255,255,255,0)),
+                    url(data:image/png;base64,iVBORw0KGg[...]QmCC); 
+  transition: background-color .2s ease-out;
+  background-clip: padding-box; /* Fix bleeding */
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .3),
+              0 2px 2px -1px rgba(0, 0, 0, .5),
+              0 1px 0 rgba(255, 255, 255, .3) inset;
+  text-shadow: 0 1px 0 rgba(255,255,255, .9);  
+}
+
+.button:hover{
+  background-color: #eee;
+  color: #555;
+}
+
+.button:active{
+  background: #e9e9e9;
+  position: relative;
+  top: 1px;
+  text-shadow: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .3) inset;
+}
+/* Smaller buttons styles */
+
+.button.small{
+  padding: 4px 12px;
+}
+
+/* Larger buttons styles */
+
+.button.large{
+  padding: 12px 30px;
+  text-transform: uppercase;
+}
+
+.button.large:active{
+  top: 2px;
+}
+
+/**
+button blue design
+
+*/
+
+.button.blue{
+  background-color: #269CE9;
+  border-color: #269CE9;
+  color:#fff;
+}
+
+.button.blue:hover{
+  background-color: #70B9E8;
+}
+
+.button.blue:active{
+  background: #269CE9;
+}
+/**
+button red design
+*/
+.button.red{
+  background-color: #c43c35;
+  border-color: #c43c35;
+  color:#fff;
+}
+
+.button.red:hover{
+  background-color: #ee5f5b;
+}
+
+.button.red:active{
+  background: #c43c35;
+}
+/**
+tabs design
+*/
+#tabs{
+  overflow: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#tabs li{
+  float: left;
+  margin: 0 .5em 0 0;
+}
+
+#tabs a{
+  position: relative;
+  background: #ddd;
+  background-image: linear-gradient(to bottom, #fff, #ddd);  
+  padding: .7em 3.5em;
+  float: left;
+  text-decoration: none;
+  color: #444;
+  text-shadow: 0 1px 0 rgba(255,255,255,.8);
+  border-radius: 5px 0 0 0;
+  box-shadow: 0 2px 2px rgba(0,0,0,.4);
+}
+
+#tabs a:hover,
+#tabs a:hover::after,
+#tabs a:focus,
+#tabs a:focus::after{
+  background: #fff;
+}
+
+#tabs a:focus{
+  outline: 0;
+}
+
+#tabs a::after{
+  content:'';
+  position:absolute;
+  z-index: 1;
+  top: 0;
+  right: -.5em;  
+  bottom: 0;
+  width: 1em;
+  background: #ddd;
+  background-image: linear-gradient(to bottom, #fff, #ddd);  
+  box-shadow: 2px 2px 2px rgba(0,0,0,.4);
+  transform: skew(10deg);
+  border-radius: 0 5px 0 0;  
+}
+
+#tabs .current a,
+#tabs .current a::after{
+  background: #fff;
+  z-index: 3;
+}
+
+#content
+{
+    background: #fff;
+    padding: 2em;
+    height: 220px;
+    position: relative;
+    z-index: 2;	
+    border-radius: 0 5px 5px 5px;
+    box-shadow: 0 -2px 3px -2px rgba(0, 0, 0, .5);
+}
+
+/**
+	text box
+*/
+.textbox
+{
+	background:url(../img/input.png) no-repeat; 
+	width:285px; 
+	height:39px; 
+	border:0px; 
+	padding-left:8px; 
+	font-size:12px; 
+	letter-spacing:1;
+}

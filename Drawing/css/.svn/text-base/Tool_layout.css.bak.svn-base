@@ -1,0 +1,37 @@
+@charset "utf-8";
+/* Default Style */body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,button,select{margin:0;padding:0}
+body,input,textarea,select,button,table{font-size:16px;line-height:1.25em;font-family:'나눔고딕',NanumGothic,'맑은 고딕','Malgun Gothic','돋움',Dotum,'굴림',Gulim,Helvetica,sans-serif}
+img,fieldset{border:0}
+article,aside,footer,header,hgroup,nav,section{display:block}
+body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,button,select{margin:0;padding:0}
+ul,ol{list-style:none}
+em,address{font-style:normal}
+a{margin:0;padding:0;color:inherit;text-decoration:none}
+table{border-collapse:collapse}
+
+
+/* Layout */
+body { background-color: #505050; }
+div.tool_container { position:relative;width: 100%; height: 100%; }
+div.tool_head { z-index:10; position:fixed; top:0px; background-image:url(../img/menu_bg.jpg); background-repeat:repeat-x; height:59px; width:100%; text-align:center; }
+div.tool_foot{  z-index:10; position:fixed; bottom: 0px; background-image:url(../img/foot_bg.jpg); background-repeat:repeat-x; height:28px; width:100%; }
+div.tool_body { position:relative; width: 100%; height:100%;}
+div.tool_canvasbox { position:relative; top: 60px; width: 1200px; height:100%;  border: 1px solid;margin: 0 auto;}
+div.tool_toolbar { z-index:9;position:absolute; top:300px; right: 0px; background-color:#292e31; width: 350px; height: 180px; }
+
+/*Canvas*/
+canvas#tool_canvas { width: 1024px; height: 768px; border: 1px solid; }
+
+
+/* Round Style */
+div.round_box { 
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+}
+
+div.shadow {
+box-shadow: 0 2px 3px rgba(0,0,0,.5);
+-webkit-box-shadow: 0 2px 3px rgba(0,0,0,.5);
+-moz-box-shadow: 0 2px 3px rgba(0,0,0,.5);
+}

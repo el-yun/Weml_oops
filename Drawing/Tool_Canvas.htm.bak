@@ -1,0 +1,298 @@
+
+<html charset="euc-kr">
+<head>
+
+	<meta charset="euc-kr" name="keywords" content="jqueryui graph, jqueryui diagram,jqueryui chart, jqueryui flowchart,javascript graph, javascript diagram,javascript chart, javascript flowchart,jquery graph, jquery diagram,jquery chart, jquery flowchart" />
+
+	<title>:: Oops Tools - Diagram Designer ::</title>
+
+	<link rel="stylesheet" href="./css/jquery.ui.all.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+	<script src="./js/jquery.ui.core.min.js"></script>
+	<script src="./js/jquery.ui.widget.min.js"></script>
+	<script src="./js/jquery.ui.mouse.min.js"></script>
+	<script src="./js/jquery.ui.draggable.min.js"></script>
+	<script src="./js/jquery.ui.resizable.min.js"></script>
+	<script src="./js/jquery.ui.droppable.min.js"></script>
+	<script src="./js/jquery.ui.button.min.js"></script>
+	<!--<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>-->
+	<script src="js/makejson.js"></script>
+	<script src="js/localStorage.js"></script>
+	<!--<script src="js/jquery.avgrund.js"></script>-->
+	<script src="js/class_module.js"></script>
+	<script src="./js/jgraphui.js"></script>
+	<script src="./js/wz_jsgraphics.js"></script>
+	<script type="text/javascript" src="js/jquery.zoomooz.js"></script>
+	<link rel="stylesheet" href="./css/diagram.css">
+	<link rel="stylesheet" href="./css/demos.css">
+	<link rel="stylesheet" href="./css/Tool_layout.css">
+	<!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />-->
+	
+	
+</head>
+	<script>      window.onload = function() {
+				$("#oops_canvas").bind("click",function(){
+					//$("#tool_relation").hide();
+				});
+
+		/* 브라우저 정보 확인 */
+		 var browserType = "";
+			 if(navigator.userAgent.indexOf("MSIE") != -1)
+			 {
+				 $("#screen_lock").show();
+				 alert("본 Oops Tool은 Chrome, Firefox 3.6, Opera 10.6 이상에서만 사용이 가능합니다!");
+				 window.close();
+			 }
+			if (typeof(localStorage) == 'undefined' ) {
+				 $("#screen_lock").show();
+			     alert("사용할 수 없는 브라우저입니다");
+				 window.close();
+			} else {
+			  try {
+			 
+			  } catch (e) {
+				 if (e == QUOTA_EXCEEDED_ERR) {
+				   alert('다이어그램 데이터 저장 할당량을 초과하였습니다.'); // 할당량 초과로 인하여 데이터를 저장할 수 없음
+				}
+			  }
+			}
+			OperClass.showLocalStorage("function");
+			OperClass.showLocalStorage("variable");
+			$("#loading_logo").fadeOut(3000);
+			$("#tool_properties, #show_modify").draggable({ cursor: "move",handle : $(".properties_title") });
+			$("#helper").draggable({ cursor: "move",handle : $(".helper_title") });
+			$("#code_viewer").draggable({ cursor: "move" });
+			$("#diagram_name").draggable({ cursor: "move" });
+			$("#code_viewer").resizable();
+			$("#varname").bind('keyup', function(event){
+				$("#span_name").html($("#varname").val());
+			});
+			$("#btn_addvar").click(function()
+			{
+				$("#new_var").show();
+				$("#new_func").hide();
+			});
+
+			$("#btn_addfunc").click(function()
+			{
+				$("#new_func").show();
+				$("#new_var").hide();
+			});
+
+			$("#oops_openhelper").click(function()
+			{
+				 if($("#helper").css("display") != "none"){
+						$("#helper").hide();
+				 } else {
+						$("#helper").show();
+				 }
+			});
+
+			$("#oops_zoomin, #oops_zoomout").bind('mouseenter', function(event){
+				show_tooltip(4);
+			});
+			$("#oops_uml, #oops_save, #oops_clear").bind('mouseenter', function(event){
+				show_tooltip(3);
+			});
+		}
+
+</script>
+<body onselectstart="return false">
+<div id="screen_lock" style="position:absolute;width:100%;height:100%;background-color:#000;z-index:99999999999;display:none;"></div>
+<div id="loading_logo" class="loading"><legend>Oops Tool을 시작합니다.</legend></div>
+<div id="save_progress" class="progress">
+<img src="img/save_progress.gif" width="32" height="32" border="0" alt="">
+<p>저장 중입니다...</p>
+</div>
+<div class="container">
+
+	<input type="hidden" id="selectconnection" />
+    <div id="tool_relation" class="relation shadow" style="display:none;">
+			<div class="relation_list">
+					<p id="rel_dep"><a href="#">Dependency (의존)</a></p>
+					<p id="rel_ass"><a href="#">Association(연관)</a></p>
+					<p id="rel_agg"><a href="#">Aggregation(집합)</a></p>
+					<p id="rel_com"><a href="#">Composition(복합)</a></p>
+					<p id="rel_inh"><a href="#">inheritance(상속)</a></p>
+			</div>
+			<div class="relation_menu"><p style="border-radius:3px;"><a href="#"  id="rel_del">관계 삭제하기</a></p></div>
+	</div>
+    <div id="tool_properties" class="properties shadow">
+	<div class="properties_title"><p><em>Class</em> Properties</p></div>
+	<div class="properties_box">
+			<input type="hidden" name="currentclass_node">
+			<input type="hidden" name="var_classname">
+			<div class="properties_menu"><p id="btn_addvar"><a href="#">멤버 변수 추가</a></p>  <p id="btn_addfunc"><a href="#">멤버 함수 추가</a></p></div>
+						<div class="properties_desk">
+								<div class="properties_subtitle" id="new_var" style="display:none">
+									<label>접근제한자 &nbsp; 
+											<input type="radio" value="public" name="var_access">Public
+											<input type="radio" value="private" name="var_access" checked>Private
+											<input type="radio" value="protected" name="var_access">Protected
+									</label>
+									<label>자&nbsp;&nbsp;&nbsp;&nbsp;료&nbsp;&nbsp;&nbsp;&nbsp;형 &nbsp; 
+										<input type="text" id="data_name">
+									</label>
+									<label>변&nbsp;수&nbsp;&nbsp;이&nbsp;름 &nbsp; 
+										<input type="text" id="var_name">
+									</label>
+									<center><span class="grd_button shadow" onclick="saveMemberVariable()">변수 저장</span></center>
+										<p>&nbsp;<br></p>
+								</div>
+								<div class="properties_subtitle" id="new_func" style="display:none">
+										<label>접근제한자 &nbsp; 
+											<input type="radio" value="public" name="func_access">Public
+											<input type="radio" value="private" name="func_access" checked>Private
+											<input type="radio" value="protected" name="func_access">Protected
+										</label>
+										<label>반&nbsp;&nbsp;&nbsp;&nbsp;환&nbsp;&nbsp;&nbsp;&nbsp;형 &nbsp; 
+											<input type="text" id="return_name">
+										</label>
+										<label>함&nbsp;수&nbsp;&nbsp;이&nbsp;름 &nbsp; 
+											<input type="text" id="func_name">
+										</label>
+										<label>파&nbsp;라&nbsp;&nbsp;미&nbsp;터 &nbsp; 
+											<input type="text" id="func_param">
+										</label>
+										<span class="grd_button shadow" onclick="saveMemberFunction()">함수 저장</span>
+										<p>&nbsp;<br></p>
+							</div>
+						<div id="classlist" class="classlist">
+									
+						</div>
+						</div>
+
+	</div>
+	</div>
+	<div id="oops_area" class="panel_body round_box shadow">
+
+	<div class="top_toolbar shadow2">
+		<div id="oops_logo" class="logo"><img src="img/Oops_logo.png" width="220" height="30" border="0" alt=""></div>
+		<div id="oops_uml" class="menu_bt"><a href="#" ><img src="img/ic_uml.png" width="25" height="25" border="0" alt=""><img class="over" src="img/ic_uml_over.png" width="25" height="25" border="0" alt="UML 클래스 다이어그램으로 변환"></a></div>
+		<div id="oops_save" class="menu_bt"><a href="#" ><img src="img/ic_save.png" width="25" height="25" border="0" alt=""><img class="over" src="img/ic_save_over.png" width="25" height="25" border="0" alt="저장하기"></a></div>
+		<!--<div id="oops_load" class="menu_bt"><a href="#"><img  src="img/ic_load.png" width="25" height="25" border="0" alt=""><img class="over" src="img/ic_load_over.png" width="25" height="25" border="0" alt="불러오기"></a></div>-->
+		<div id="oops_clear" class="menu_bt"><a href="#"><img src="img/ic_clear.png" width="25" height="25" border="0" alt=""><img class="over" src="img/ic_clear_over.png" width="25" height="25" border="0"  alt="캔버스 지우기"></a></div>
+	</div>
+	      <div id="oops_viewport" class="oops_viewport">
+									<div id="oops_canvas">
+										<script language="javascript">
+										$(document).ready(function() {
+											var diagram = new Diagram(
+													{
+													'xPosition':50, 
+													'yPosition':0, 
+													'width':1110, 
+													'height':580,
+													'imagesPath': '/tool/images/',
+													'connectionColor': '#AA0000'
+													});	
+												if(getParameter("autoload")){
+													if(getParameter("seq")){
+																var seq_id = getParameter("seq");
+																diagram.clearCanvas();
+																$.ajax({
+																	url:"../php/opendiagram.php",
+																	type:"POST",
+																	data:{category:'opendetail', seqid: seq_id},
+																	success:function(data)
+																	{
+																		  $.ajax({
+																				url: "../../php/session.php",
+																				type: "post",
+																				success:function(response,status, request){
+																					if(response != 0)
+																					{
+																							if(request.responseText.toLowerCase() != data.diagram[0].memid.toLowerCase()){
+																								$("#oops_save").hide();
+																								//$("#oops_load").hide();
+
+																							}
+																					}
+																					else
+																					{
+
+																					}
+																				},
+																				error:function(request, status,error){
+																					alert("code:"+request.status+"\n"+"message:"+request.responseText);
+																				}
+																			});
+																				var data = JSON.parse(data);
+																				localStorage.setItem("diagram", data.diagram[0].diagraminfo);
+																				localStorage.setItem("diagram_class_resource", data.diagram[0].diagramdrawing);
+																				localStorage.setItem("diagram_conn_resource", data.diagram[0].diagramdrawing_connect);
+																				diagram.fromJSON_ime();
+																								
+																	},
+																	error:function(x)
+																	{
+																		alert(x.responseText);
+																	}
+																});
+													} else {
+														diagram.fromJSON_ime();
+													}
+												}
+										});
+										</script>
+									</div>
+				</div>
+	</div>
+</div>
+<!--<div id="code_viewer" class="code_viewer shadow_up">
+	<div class="viewer">
+		<div class="viewer_title">Preview</div>
+			<div class="viewer_code">
+				<font size="3pt">
+					<div id="classlist">
+				
+					</div>
+				</font>
+			</div>
+	</div>
+</div>
+-->
+	<div class="bottom_controller shadow zoomContainer">
+		<a id="oops_newclass" class='main_button shadow1' style="width:100px;margin-right:5px;"><img src="img/plus.png" width="16" height="16" border="0" alt="">&nbsp;Add Class</a>
+		<a id="oops_delclass" class='main_button shadow1' style="width:20px;margin-right:5px;"><img src="img/minus.png" width="16" height="16" border="0" alt=""></a>
+		<a id="oops_openhelper" class='main_button shadow1' style="width:60px;margin-right:5px;">Help</a>
+		<a id="oops_zoomin"class='main_button shadow1' style="width:20px;"  onclick="zoomIn()"><img src="img/zoom-in.png" width="24" height="24" border="0" alt=""></a>
+		<a id="oops_zoomout"class='main_button shadow1' style="width:20px;"  onclick="zoomOut()"><img src="img/zoom-out.png" width="24" height="24" border="0" alt=""></a>
+	</div>
+
+<div id="diagram_name" style="display:none" class="diagrammodal properties shadow">
+	<div class="properties_title"><p><em>Save Diagram</p></div>
+	<div style="border:0px solid red; width:80%; margin:0 auto;margin-top:10px;">
+	<p>다이어그램 이름을 입력하세요.</p>
+	<input type="text" name="diagram_name" style="width:100%;">
+	<p>다이어그램 설명을 입력하세요.</p>
+	<textarea rows="7" cols="32" name="diagram_explain" id="diagram_explain" style="width:100%;height: 50px;"></textarea>
+	</div>
+	<div style="margin-left: 45px; margin-top:5px;">
+	<center>
+		<a class='btnbesth' href="javascript:finalClassSave()">저장</a>
+		<a class='btncancle' href="javascript:OperClass.diagramcancle()">취소</a>
+		</center>
+	</div>
+</div>
+<div id="show_modify" style="display:none" class="modifymodal properties">
+	<div class="properties_title"><p><em>Member Modify</p></div>
+	<div id="modify_field" class="modify_inbox"></div>
+</div>
+
+    <div id="helper" class="helper shadow">
+	<div class="helper_title"><p>Oops Helper</p></div>
+	<div class="helper_box">
+						<div id="helper_desk" class="helper_desk">
+							<img src="../images/help/addClass.gif" width="290" height="200" border="0" alt="">
+							<p class="helper_subject">클래스 생성하기<p>
+							<p class="helper_text">"Add Class"로 원하는 클래스를 생성할 수 있습니다.</p>
+							<p class="helper_text">원하는 위치에 클래스를 배치합니다. UML 산출물의 경우 다이어그램의 클래스 위치를 기준으로 생성됩니다.</p>
+							<p class="helper_text">Oops Tool은 C++ 기준의 코드를 제공하므로 코드 생성시 C++ 문법을 고려하여 다이어그램을 편집해야합니다.</p>
+						</div>
+	</div>
+	</div>
+
+</body>
+</html>

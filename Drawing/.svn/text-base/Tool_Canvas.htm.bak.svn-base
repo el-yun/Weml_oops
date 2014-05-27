@@ -1,0 +1,173 @@
+
+<html>
+<head>
+
+	<meta name="keywords" content="jqueryui graph, jqueryui diagram,jqueryui chart, jqueryui flowchart,javascript graph, javascript diagram,javascript chart, javascript flowchart,jquery graph, jquery diagram,jquery chart, jquery flowchart" />
+
+	<title>:: Oops Tools - Diagram Designer ::</title>
+
+	<link rel="stylesheet" href="./css/jquery.ui.all.css">
+	<script src="./js/jquery-1.6.2.min.js"></script>
+	<script src="./js/jquery.ui.core.min.js"></script>
+	<script src="./js/jquery.ui.widget.min.js"></script>
+	<script src="./js/jquery.ui.mouse.min.js"></script>
+	<script src="./js/jquery.ui.draggable.min.js"></script>
+	<script src="./js/jquery.ui.resizable.min.js"></script>
+	<script src="./js/jquery.ui.droppable.min.js"></script>
+	<script src="./js/jquery.ui.button.min.js"></script>
+	<script src="js/makejson.js"></script>
+	<script src="js/localStorage.js"></script>
+	<script src="js/jquery.avgrund.js"></script>
+	<script src="js/class_module.js"></script>
+	<script src="./js/jgraphui.js"></script>
+	<script src="./js/wz_jsgraphics.js"></script>
+	<link rel="stylesheet" href="./css/diagram.css">
+	<link rel="stylesheet" href="./css/demos.css">
+	<style>
+
+	html, body {
+		left: 0px;
+		top: 0px;
+		width: 100%;
+		height: 100%;
+		margin: 0px;
+		padding: 0px;
+		
+ 	}
+	body { background-color: #505050; }
+	a { text-decoration:none; color:#FFF; }
+	.container { width: 100%; height: 100%;margin-top: 30px; }
+	.panel_body { width:1110px; height: 650px; position:relative;  margin:0 auto;  padding: 0px 0px 0px 0px; }
+	.round_box {  border-radius: 6px; background-color:#FFFFFF; margin:0 auto; }
+	.round_box p { line-height: 110%; font-weight: bold; font-size: 20px; }
+	.left_menu_0 { width: 260px; height: 320px; background-image:-webkit-gradient(linear, left top,left bottom, color-stop(0, rgb(230,230,230)),color-stop(1, rgb(255,255,255))); }
+	.menu_header { width: 100%; height: 30px; background-color:#242424; }
+	.menu_bt {  float:right;background-image:-webkit-gradient(linear, left top,left bottom, color-stop(0, rgb(75,75,75)),color-stop(1, rgb(90,90,90)));  
+	text-align:center; font-size: 18px; padding-top: 5px; color:#FFFFFF; margin:0 auto;  border-left: 1px solid #393939; border-right: 1px solid #393939; }
+	.new_item { width: 130px; height: 30px;  }
+	.del_item { width: 130px; height: 30px; margin-right: 20px;  }
+	.save_item { width: 120px; height: 30px; }
+	.load_item { width: 120px; height: 30px;  }
+	.logo { width: 220px; height: 30px; float:left; margin-left: 15px; }
+	.menu_bt a:hover { color: #ffcc00; }
+	div.shadow {
+	box-shadow: 0 3px 15px rgba(0,0,0,.5);
+	-webkit-box-shadow: 0 3px 15px rgba(0,0,0,.5);
+	-moz-box-shadow: 0 3px 15px rgba(0,0,0,.5);
+	}
+	div.shadow2 {
+	box-shadow: 0 1px 5px rgba(0,0,0,.3);
+	-webkit-box-shadow: 0 1px 5px rgba(0,0,0,.3);
+	-moz-box-shadow: 0 1px 5px rgba(0,0,0,.3);
+	}
+	.oops_area{ width: 100%; height: 100%; }
+	.canvas_drawing { width: 1110px; height: 610px; margin: 0 auto;   }
+	.canvas_area{ width: 100%; height: 0px;}
+	.top_toolbar { width:100%; height: 35px; border-top-left-radius:5px;border-top-right-radius:5px;background-image:-webkit-gradient(linear, left top,left bottom, color-stop(0, rgb(90,90,90)),color-stop(1, rgb(75,75,75)));  }
+	.properties { position:absolute; top: 100px; right: 20px; background-color:#000; width: 250px; height: 400px; z-index:999999; filter:alpha(opacity=70); opacity:0.7; -moz-opacity:0.7;border-radius:3px; color: #FFF; font-size:12px; }
+	</style>
+	
+</head>
+	<script>
+      window.onload = function() {
+		
+			$("#tool_properties").draggable({ cursor: "move" });
+
+			$("#varname").bind('keyup', function(event){
+				$("#span_name").html($("#varname").val());
+			});
+
+		}
+	</script>
+<body>
+<div class="container">
+
+	<div id="oops_area" class="panel_body round_box shadow">
+    <div id="tool_properties" class="properties shadow">
+			<input type="button" name="testjson" value="123" onclick="view()">
+			<input type="hidden" name="currentclass_node">
+			<input type="text" name="var_classname" readonly="readonly">
+			접근제한자 : 
+			<input type="radio" value="public" name="var_access">public
+			<input type="radio" value="private" name="var_access">private
+			<input type="radio" value="protected" name="var_access">protected
+			<br><br>
+
+			자료형 : 
+			<input type="radio" value="int" name="var_data">int
+			<input type="radio" value="double" name="var_data">double
+			<input type="radio" value="string" name="var_data">string
+			<br><br>
+
+			변수이름 :
+			<input type="text" id="var_name">
+			<br><br>
+
+			<button type="button" onclick="saveMemberVariable()">멤버변수 저장</button>
+
+			<!--
+			-------------------------------------------------------------------------------------<br><br>
+			접근제한자 : 
+			<input type="radio" value="public" name="func_access">public
+			<input type="radio" value="private" name="func_access">private
+			<input type="radio" value="protected" name="func_access">protected
+			<br><br>
+
+			반환형 : 
+			<input type="radio" value="int" name="func_data">int
+			<input type="radio" value="double" name="func_data">double
+			<input type="radio" value="string" name="func_data">string
+			<br><br>
+
+			함수이름 :<br><br>
+			<input type="text" id="func_name"><br><br>
+
+			[ Parameter ] 
+			<br><br>
+
+			자료형:
+			<input type="radio" value="int" name="param_data">int
+			<input type="radio" value="double" name="param_data">double
+			<input type="radio" value="string" name="param_data">string
+			<br><br>
+
+			인자이름:
+			<input type="text" id="param_name">
+			<br><br>
+
+
+			<button type="button" onclick="saveParam()">인자 추가</button><br><br>
+
+			<button type="button" onclick="saveMemberFunction()">멤버함수 저장</button><br><br>-->
+
+			<button type="button" onclick="finalClassSave()">클래스 저장</button><br><br>
+
+	</div>
+	<div class="top_toolbar shadow2">
+		<div id="oops_logo" class="logo"><img src="img/Oops_logo.png" width="220" height="30" border="0" alt=""></div>
+		<div id="oops_delclass" class="del_item menu_bt"><a href="#">Delete Class</a></div>
+		<div id="oops_newclass" class="new_item menu_bt"><a href="#">New Class</a></div>
+		<div id="oops_save" class="save_item menu_bt"><a href="#">Save</a></div>
+		<div id="oops_load" class="load_item menu_bt"><a href="#">Load</a></div>
+	</div>
+	
+			<div id="oops_canvas">
+				<script language="javascript">
+				$(document).ready(function() {
+					var diagram = new Diagram(
+							{
+							'xPosition':50, 
+							'yPosition':0, 
+							'width':1000, 
+							'height':580,
+							'imagesPath': '/tool/images/',
+							'connectionColor': '#AA0000'
+							});	
+				});
+				</script>
+			</div>
+	</div>
+	<!--<textarea id="testing" style='width:1000px;height:500px'></textarea>-->
+</div>
+</body>
+</html>

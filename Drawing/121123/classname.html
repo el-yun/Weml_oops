@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <link rel="stylesheet" type="text/css" href="css/classStyle.css" />
+  <link rel="stylesheet" type="text/css" href="css/avgrund.css" />
+   <link rel="stylesheet" type="text/css" href="js/jquery-ui-1.9.1.custom/css/oops/jquery-ui-1.9.1.custom.min.css" />
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="js/jquery-ui-1.9.1.custom/js/jquery-ui-1.9.1.custom.min.js"></script>
+<script src="js/makejson.js"></script>
+<script src="js/localStorage.js"></script>
+<script src="js/jquery.avgrund.js"></script>
+
+ </HEAD>
+
+<SCRIPT>
+
+	var OperClass = new ClassStorage();
+	var currentClass;
+
+	var paramData = [];
+	var paramCnt = 0;
+	var param;
+
+	$(document).ready(function() 
+	{
+		/*var ui = [];
+		
+		ui[0] = new memberVarPro("public", "variba", "double");
+		ui[1] = new memberVarPro("private", "asdf", "int");
+		var ui_string = JSON.stringify(ui);
+
+		var t =new createMemberVar(ui);*/
+
+		//console.log(t);
+		
+		
+
+	});
+	
+	function makeClass(data)
+	{
+		currentClass = OperClass.makeClass(data);
+		var key = "#"+currentClass;
+		var var_html = "<div id='"+currentClass+"_var'>";
+		var func_html = "<div id='"+currentClass+"_func'>";
+
+		if($(key).length > 0)
+		{
+			$("#"+currentClass+"_var").html(OperClass.showLocalStorage("variable"));
+			$("#"+currentClass+"_func").html(OperClass.showLocalStorage("function"));
+			alert(currentClass);
+			return;
+		}
+
+		else
+		{
+			var html = "<div id='"+currentClass+"'>";
+			
+			$(html).appendTo($("#classlist"));
+			$(var_html).appendTo($("#"+currentClass));
+			$(func_html).appendTo($("#"+currentClass));
+
+			if(localStorage.getItem(currentClass+"_varCnt") == undefined)
+			{
+				localStorage.setItem(currentClass+"_varCnt", 0);
+			}
+			if(localStorage.getItem(currentClass+"_funcCnt") == undefined)
+			{
+				localStorage.setItem(currentClass+"_funcCnt", 0);
+			}
+			$("#"+currentClass+"_var").html(OperClass.showLocalStorage("variable"));
+			$("#"+currentClass+"_func").html(OperClass.showLocalStorage("function"));
+			alert(currentClass);
+		}
+		
+	}
+
+	function saveMemberVariable()
+	{
+		var access = $("input[name=var_access]:checked").val();
+		var data = $("input[name=var_data]:checked").val();
+		var name = $("#var_name").val();
+		var key_cnt = currentClass+"_varCnt";
+		var cnt = localStorage.getItem(key_cnt);
+		var key = "#"+name;
+		if($(key).length > 0) return;
+		else
+		{
+			var result = new memberVarPro(access, name, data);
+			
+			if(OperClass.saveMembervar(currentClass, cnt, JSON.stringify(result)) == 1)
+			{
+				
+				alert('로컬스토리지 입력 성공');
+				localStorage.setItem(key_cnt, ++cnt);
+				$("#"+currentClass+"_var").html(OperClass.showLocalStorage("variable"));
+
+			}
+			else
+				alert('로컬스토리지 입력 실패');
+		}
+	}
+
+	function saveMemberFunction()
+	{
+		var access = $("input[name=func_access]:checked").val();
+		var data = $("input[name=func_data]:checked").val();
+		var name = $("#func_name").val();
+		var key_cnt = currentClass+"_funcCnt";
+		var cnt = localStorage.getItem(key_cnt);
+
+		var result = new memberFuncPro(access, name, data, param);
+
+		if(OperClass.saveMemberFunc(currentClass, cnt, JSON.stringify(result)) == 1)
+		{
+			paramData = [];
+			paramCnt = 0;
+			param = "";
+			alert('로컬스토리지 입력 성공');
+			localStorage.setItem(key_cnt, ++cnt);
+			$("#"+currentClass+"_func").html(OperClass.showLocalStorage("function"));
+		}
+		else
+			alert('로컬스토리지 입력 실패');
+
+	}
+
+	function saveParam()
+	{
+		var data = $("input[name=param_data]:checked").val();
+		var name = $("#param_name").val();
+		paramData[paramCnt++] = new addParameter(data, name);
+		param = new addFinalParameter(paramData);
+		console.log(JSON.stringify(param));
+	}
+
+	function finalClassSave()
+	{
+		/*var funccnt = localStorage.getItem(currentClass+"_funcCnt");
+		var varcnt = localStorage.getItem(currentClass+"_varCnt");
+		var test = [];
+		var test_ = [];
+
+		for(var i=0; i<varcnt; i++)
+		{
+			test[i] = JSON.parse(localStorage.getItem(currentClass+"_var_"+i));
+			console.log(test);
+		}
+
+		for(var i=0; i<funccnt; i++)
+		{
+			test_[i] = JSON.parse(localStorage.getItem(currentClass+"_func_"+i));
+		}
+		
+		var temp_var = new createMemberVar(test);
+		var temp_func = new createMemberFunc(test_);
+		console.log(JSON.stringify(temp_var));
+		console.log(JSON.stringify(temp_func));*/
+
+		
+	}
+	function showClassData(access, data, name, cnt)
+	{
+		alert(access + "." + data + "." + name + "." +cnt);
+	}
+</SCRIPT>
+ <BODY>
+<button type="button" onclick="makeClass('class1')">클래스1</button>
+<button type="button" onclick="makeClass('class2')">클래스2</button>
+<button type="button" onclick="makeClass('class3')">클래스3</button><br><br>
+
+접근제한자 : 
+<input type="radio" value="public" name="var_access">public
+<input type="radio" value="private" name="var_access">private
+<input type="radio" value="protected" name="var_access">protected
+<br><br>
+
+자료형 : 
+<input type="radio" value="int" name="var_data">int
+<input type="radio" value="double" name="var_data">double
+<input type="radio" value="string" name="var_data">string
+<br><br>
+
+변수이름 :
+<input type="text" id="var_name">
+<br><br>
+
+<button type="button" onclick="saveMemberVariable()">멤버변수 저장</button>
+-------------------------------------------------------------------------------------<br><br>
+접근제한자 : 
+<input type="radio" value="public" name="func_access">public
+<input type="radio" value="private" name="func_access">private
+<input type="radio" value="protected" name="func_access">protected
+<br><br>
+
+반환형 : 
+<input type="radio" value="int" name="func_data">int
+<input type="radio" value="double" name="func_data">double
+<input type="radio" value="string" name="func_data">string
+<br><br>
+
+함수이름 :<br><br>
+<input type="text" id="func_name"><br><br>
+
+[ Parameter ] 
+<br><br>
+
+자료형:
+<input type="radio" value="int" name="param_data">int
+<input type="radio" value="double" name="param_data">double
+<input type="radio" value="string" name="param_data">string
+<br><br>
+
+인자이름:
+<input type="text" id="param_name">
+<br><br>
+
+
+<button type="button" onclick="saveParam()">인자 추가</button><br><br>
+
+<button type="button" onclick="saveMemberFunction()">멤버함수 저장</button><br><br>
+
+<button type="button" onclick="finalClassSave()">클래스 저장</button><br><br>
+
+=====================================================
+<div id="classlist"></div>
+ </BODY>
+</HTML>
+	

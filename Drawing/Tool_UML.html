@@ -1,0 +1,245 @@
+
+<html charset="euc-kr">
+<head>
+
+	<meta charset="euc-kr" name="keywords" content="jqueryui graph, jqueryui diagram,jqueryui chart, jqueryui flowchart,javascript graph, javascript diagram,javascript chart, javascript flowchart,jquery graph, jquery diagram,jquery chart, jquery flowchart" />
+
+	<title>:: Oops Tools - Diagram Designer ::</title>
+
+	<link rel="stylesheet" href="./css/jquery.ui.all.css">
+	<script src="./js/jquery-1.6.2.min.js"></script>
+
+	<script src="./js/jquery.ui.core.min.js"></script>
+	<script src="./js/jquery.ui.widget.min.js"></script>
+	<script src="./js/jquery.ui.mouse.min.js"></script>
+	<script src="./js/jquery.ui.draggable.min.js"></script>
+	<script src="./js/jquery.ui.resizable.min.js"></script>
+	<script src="./js/jquery.ui.droppable.min.js"></script>
+	<script src="./js/jquery.ui.button.min.js"></script>
+	<!--<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>-->
+	<script src="js/makejson.js"></script>
+	<script src="js/localStorage.js"></script>
+	<!--<script src="js/jquery.avgrund.js"></script>-->
+	<script src="js/class_module.js"></script>
+	<script src="./js/jgraphui_uml.js"></script>
+	<script src="./js/wz_jsgraphics.js"></script>
+	<link rel="stylesheet" href="./css/diagram.css">
+	<link rel="stylesheet" href="./css/demos.css">
+	<link rel="stylesheet" href="./css/Tool_layout.css">
+	<!--<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />-->
+
+</head>
+	<script>
+      window.onload = function() {
+
+			OperClass.showLocalStorage("function");
+			OperClass.showLocalStorage("variable");
+			$("#tool_properties").draggable({ cursor: "move" });
+			$("#code_viewer").draggable({ cursor: "move" });
+			$("#show_modify, #diagram_name").draggable({ cursor: "move" });
+			$("#code_viewer").resizable();
+			$("#varname").bind('keyup', function(event){
+				$("#span_name").html($("#varname").val());
+			});
+			$("#btn_addvar").click(function()
+			{
+				$("#new_var").show();
+				$("#new_func").hide();
+			});
+
+			$("#btn_addfunc").click(function()
+			{
+				$("#new_func").show();
+				$("#new_var").hide();
+			});
+
+			$("#oops_openhelper").click(function()
+			{
+				 if($("#helper").css("display") != "none"){
+						$("#helper").hide();
+				 } else {
+						$("#helper").show();
+				 }
+			});
+
+			$("#oops_uml, #oops_clear").bind('mouseenter', function(event){
+				show_tooltip(5);
+			});
+			$("#oops_print, #oops_openhelper, #oops_zoomin, #oops_zoomout").bind('mouseenter', function(event){
+				show_tooltip(6);
+			});
+		}
+		function UMLCapture()
+		{
+
+		var load_class = JSON.parse(localStorage.getItem("diagram_class_resource"));
+		var load_conn = JSON.parse(localStorage.getItem("diagram_conn_resource"));
+
+		var classData = [];
+		for(var j=0; j<load_class.length; j++)
+		{
+			var funccnt = localStorage.getItem(load_class[j].nodeId+"_funcCnt");
+			var varcnt = localStorage.getItem(load_class[j].nodeId+"_varCnt");
+			var test = [];
+			var test_ = [];
+
+			for(var i=0; i<varcnt; i++)
+			{
+				test[i] = JSON.parse(localStorage.getItem(load_class[j].nodeId+"_var_"+i));
+				console.log(test);
+			}
+
+			for(var i=0; i<funccnt; i++)
+			{
+				test_[i] = JSON.parse(localStorage.getItem(load_class[j].nodeId+"_func_"+i));
+			}
+			
+			var temp_var = new createMemberVar(test);
+			var temp_func = new createMemberFunc(test_);
+			console.log(JSON.stringify(temp_var));
+			console.log(JSON.stringify(temp_func));
+			classData[j] = new createClass(test, test_, load_class[j].nodeContent, JSON.parse(localStorage.getItem(load_class[j].nodeId+"_relation")), load_class[j].nodeId);
+			classData[j] = new addPrefixClass(classData[j]);
+		}
+
+		var result = new createDiagram(classData);
+		alert(JSON.stringify(result));
+			//alert(seq_id);
+			//window.open('../CutyCapt/umlcapture.php?seqid=');"
+			$.ajax({
+				type : "POST",
+				data : {jsondata:localStorage.getItem("diagram_class_resource"), jsonconn:localStorage.getItem("diagram_conn_resource"),jsonmember:JSON.stringify(result)},
+				url : "../CutyCapt/umlcapture.php",
+				success : function(result) {
+					window.open("./Print_UML.php?IMG_URL=" + result);
+				},
+				error : function(x) {
+					//alert(x.responseText);
+					alert('ddd');
+				}
+				
+			});
+		}
+	</script>
+<body id="ground">
+<div class="container">
+
+	<div id="oops_area" class="panel_body round_box shadow">
+
+	<div class="top_toolbar shadow2">
+		<div id="oops_logo" class="logo"><img src="img/Oops_logo.png" width="220" height="30" border="0" alt=""></div>
+		<div id="oops_uml" class="menu_bt"><a href="#" ><img src="img/ic_uml.png" width="25" height="25" border="0" alt=""><img class="over" src="img/ic_uml_over.png" width="25" height="25" border="0" alt="다이어그램 편집"></a></div>
+		<div id="oops_clear" class="menu_bt"><a href="#"><img src="img/ic_clear.png" width="25" height="25" border="0" alt=""><img class="over" src="img/ic_clear_over.png" width="25" height="25" border="0"  alt="캔버스 지우기"></a></div>
+	</div>
+	      <div id="oops_viewport" class="oops_viewport">
+			<div id="oops_canvas">
+				<script language="javascript">
+				$(document).ready(function() {
+					var diagram = new Diagram(
+							{
+							'xPosition':50, 
+							'yPosition':0, 
+							'width':1000, 
+							'height':580,
+							'imagesPath': '/tool/images/',
+							'connectionColor': '#AA0000'
+							});	
+						if(getParameter("autoload")){
+							if(getParameter("seq")){
+										var seq_id = getParameter("seq");
+										diagram.clearCanvas();
+										$.ajax({
+											url:"../php/opendiagram.php",
+											type:"POST",
+											data:{category:'opendetail', seqid: seq_id},
+											success:function(data)
+											{
+												var data = JSON.parse(data);
+												localStorage.setItem("diagram", data.diagram[0].diagraminfo);
+												localStorage.setItem("diagram_class_resource", data.diagram[0].diagramdrawing);
+												localStorage.setItem("diagram_conn_resource", data.diagram[0].diagramdrawing_connect);
+												diagram.fromJSON();
+																		
+											},
+											error:function(x)
+											{
+												alert(x.responseText);
+											}
+										});
+							} else {
+								diagram.fromJSON();
+							}
+						} else {
+
+							diagram.fromJSON();
+						}
+				});
+				</script>
+			</div>
+			</div>
+	</div>
+</div>
+<script>
+
+			var nowZoom = 100; // 현재비율
+			var maxZoom = 200; // 최대비율(500으로하면 5배 커진다)
+			var minZoom = 10; // 최소비율
+			 
+		 
+			//화면 키운다.
+			function zoomIn()
+			{
+				if (nowZoom < maxZoom)
+				{
+					nowZoom += 10; //25%씩 커진다.
+				} 
+				else
+				{
+					return;
+				}
+				document.getElementById("oops_canvas").style.zoom = nowZoom + "%";
+			}
+			 
+			//화면 줄인다.
+			function zoomOut()
+			{
+				if (nowZoom > minZoom)
+				{
+					nowZoom -= 10; //25%씩 작아진다.
+				} 
+				else
+				{
+					return;
+				}
+				document.getElementById("oops_canvas").style.zoom = nowZoom + "%";
+			}
+			 
+			//화면 원래대로 
+			function zoomDefault() 
+			{ 
+				nowZoom = 100; 
+				document.getElementById("oops_canvas").style.zoom = nowZoom + "%"; 
+			}
+</script>
+	<div class="bottom_controller_uml shadow">
+		<!--<a id="oops_print" class='main_button shadow1' style="width:100px;margin-right:5px;" href="javascript:window.open('./Tool_UML_Print.html');">UML Print</a>-->
+		<a id="oops_print" class='main_button shadow1' style="width:100px;margin-right:5px;" href="javascript:UMLCapture()">UML Print</a>
+		<a id="oops_openhelper" class='main_button shadow1' style="width:60px;margin-right:5px;">Help</a>
+		<a id="oops_zoomin" class='main_button shadow1' style="width:30px;"  onclick="zoomIn()"><img src="img/zoom-in.png" width="24" height="24" border="0" alt=""></a>
+		<a id="oops_zoomout" class='main_button shadow1' style="width:30px;"  onclick="zoomOut()"><img src="img/zoom-out.png" width="24" height="24" border="0" alt=""></a>
+	</div>
+
+    <div id="helper" class="helper shadow">
+	<div class="helper_title"><p>Oops Helper</p></div>
+	<div class="helper_box">
+						<div id="helper_desk" class="helper_desk">
+							<img src="../images/help/addClass.gif" width="290" height="200" border="0" alt="">
+								<img src="../../images/help/UML2buttons.gif" width="290" height="200" border="0" alt="">
+								<p class="helper_subject">UML 기본 메뉴 도움말<p>
+								<p class="helper_text">UML 클래스 다이어그램은 다이어그램에서 만든 객체와 메소드의 대한 정보를 확인합니다.</p>
+								<p class="helper_text">UML 기본 메뉴에는 다이어그램 편집으로 돌아가기와 UML/다이어그램 초기화 버튼이 있습니다. </p>
+						</div>
+	</div>
+	</div>
+</body>
+</html>
